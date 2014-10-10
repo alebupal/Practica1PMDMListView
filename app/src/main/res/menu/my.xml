@@ -5,4 +5,16 @@
         android:title="@string/m_anadir"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/action_nombre"
+        android:title="@string/m_nombre"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_genero"
+        android:title="@string/m_genero"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_fecha"
+        android:title="@string/m_fecha"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
 </menu>

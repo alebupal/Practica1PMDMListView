@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,11 +49,8 @@ public class MyActivity extends Activity {
 
         AdaptadorArrayList.ViewHolder vh;
         vh=(AdaptadorArrayList.ViewHolder) o;
-        tostada(vh.tvTitulo.getText().toString());
 
         if (id == R.id.action_borrar) {
-            /*peliculas.remove(index);
-            ad.notifyDataSetChanged();*/
             borrar(index);
 
         }else if(id==R.id.action_editar){
@@ -61,6 +60,7 @@ public class MyActivity extends Activity {
 
 
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +123,7 @@ public class MyActivity extends Activity {
         }
         ad=new AdaptadorArrayList(this,R.layout.lista_detalle,peliculas);
         final ListView lv=(ListView)findViewById(R.id.lvLista);
+
         lv.setAdapter(ad);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -130,10 +131,25 @@ public class MyActivity extends Activity {
                 Object o=view.getTag();
                 AdaptadorArrayList.ViewHolder vh;
                 vh=(AdaptadorArrayList.ViewHolder)o;
+                final ImageView img=(ImageView)findViewById(R.id.img);
+                img.setVisibility(View.VISIBLE);
+                //@drawable/ic_launcher
+                int imagen = MyActivity.this.getResources().getIdentifier("@drawable/ic_launcher", null, MyActivity.this.getPackageName());
+                img.setImageResource(imagen);
+                img.setOnTouchListener(new View.OnTouchListener(){
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        img.setVisibility(View.GONE);
+                        return true;
+                    }
+                });
+
+                /*
                 tostada(vh.tvTitulo.getText().toString());
-                tostada(peliculas.get(i)+" "+lv.getItemAtPosition(i));
+                tostada(peliculas.get(i)+" "+lv.getItemAtPosition(i))*/;
             }
         });
+
         registerForContextMenu(lv);
 
 
@@ -188,7 +204,6 @@ public class MyActivity extends Activity {
         });
         alert.setNegativeButton("Cancelar",null);
         alert.show();
-        tostada("Película añadida");
         return true;
     }
     private boolean borrar(final int pos){
@@ -249,23 +264,7 @@ public class MyActivity extends Activity {
     private boolean settings(){
         return true;
     }
-    /**Cuando haces click en la imagen aparece el modificar que hemos declarado antes*/
-    /*public void edit(View v){
-        int elemento=-1;
-        //guardamos la posicion en ViewHolder de la imagen y se la pasamos a la variable elementoV2
-        //metodo 1
-        int elementoV2;
-        elementoV2=(Integer)v.getTag();
 
-        //metodo 2
-        ViewParent vp= v.getParent();
-        View vp2=(View)vp;
-        Object o=vp2.getTag();
-        elemento= ((AdaptadorArrayList.ViewHolder) o).posicion;
-        //
-        editar(elementoV2);
-
-    }*/
     /****************************************************/
     /*                                                  */
     /*               menus                              */
