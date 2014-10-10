@@ -13,17 +13,19 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etAnio"
-        android:hint="@string/et_anio" />
+        android:id="@+id/etGenero"
+        android:hint="@string/et_genero" />
 
-    <Spinner
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spGenero" />
+        android:id="@+id/etAnio"
+        android:hint="@string/et_anio" />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/bt_foto"
         android:id="@+id/button" />
+
 </LinearLayout>
