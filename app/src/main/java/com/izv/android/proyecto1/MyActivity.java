@@ -2,12 +2,10 @@ package com.izv.android.proyecto1;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,25 +29,21 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.SimpleImageLoadingListener;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 
 public class MyActivity extends Activity {
-    int INTENT_GALERIA = 1;
-    int INTENT_GALERIA_EDITAR = 2;
-    int posicionEditar=0;
-    Pelicula peliActual = null;
-    Pelicula peliActualEditar = null;
+    private int INTENT_GALERIA = 1;
+    private int INTENT_GALERIA_EDITAR = 2;
+    private int posicionEditar=0;
+    private Pelicula peliActual = null;
     private ArrayList<Pelicula> peliculas;
-    private ArrayList <Pelicula> datos= new ArrayList <Pelicula>();
     private AdaptadorArrayList ad;
+    private String rutaFotoElegida=null;
+    private Boolean seleccion=false;
 
     //cargador de imagenes
     public ImageLoader cargadorImagenes;
@@ -119,29 +113,31 @@ public class MyActivity extends Activity {
     }
 
 //
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    Log.v("ruta", resultCode + "");
+    if (resultCode == Activity.RESULT_OK && requestCode == INTENT_GALERIA) {
+        peliActual = new Pelicula();
+        rutaFotoElegida = getRealPathFromUri(data.getData());
+        peliActual.setUriCaratula(rutaFotoElegida);
 
-        if(resultCode== Activity.RESULT_OK && requestCode == INTENT_GALERIA){
-            peliActual = new Pelicula();
-            String rutaFotoElegida = getRealPathFromUri(data.getData());
-            tostada(rutaFotoElegida);
+    } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_GALERIA_EDITAR) {
 
-            peliActual.setUriCaratula(rutaFotoElegida);
+        rutaFotoElegida = getRealPathFromUri(data.getData());
 
-        }else if(resultCode== Activity.RESULT_OK && requestCode == INTENT_GALERIA_EDITAR) {
-            String rutaFotoElegida = getRealPathFromUri(data.getData());
+        if (peliculas.get(posicionEditar).getUriCaratula() == null) {
 
-            if (peliculas.get(posicionEditar).getUriCaratula() == null) {
-
-                peliculas.get(posicionEditar).setUriCaratula(rutaFotoElegida);
-                peliculas.get(posicionEditar).setCaratula(0);
-            }
-            tostada(rutaFotoElegida);
             peliculas.get(posicionEditar).setUriCaratula(rutaFotoElegida);
+            peliculas.get(posicionEditar).setCaratula(0);
         }
-
-        super.onActivityResult(requestCode, resultCode, data);
+        tostada(rutaFotoElegida);
+        peliculas.get(posicionEditar).setUriCaratula(rutaFotoElegida);
+    } else if (resultCode == 0) {
+        rutaFotoElegida = null;
+        seleccion = false;
     }
+
+    super.onActivityResult(requestCode, resultCode, data);
+}
     /****************************************************/
     /*                                                  */
     /*               auxiliares                         */
@@ -215,10 +211,11 @@ public class MyActivity extends Activity {
         final View vista = inflater.inflate(R.layout.anadir, null);
 
         Button btfoto = (Button) vista.findViewById(R.id.btFoto);
+        seleccion=false;
         btfoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tostada("aaaaa1a");
+                seleccion=true;
                 Intent i = new Intent(Intent.ACTION_PICK);
                 i.setType("image/*");
                 MyActivity.this.startActivityForResult(i, INTENT_GALERIA);
@@ -234,11 +231,11 @@ public class MyActivity extends Activity {
                 etGenero = (EditText) vista.findViewById(R.id.etGenero);
                 if(peliActual==null)
                 peliActual = new Pelicula();
-
+                tostada("--------------------"+seleccion);
                 if(etTitulo.getText().toString().equals("")==true || etAnio.getText().toString().equals("")==true || etGenero.getText().toString().equals("")==true){
                     tostada("Algun/os campos vacíos");
                 }else{
-                    if (peliActual.getUriCaratula() == null){
+                    if (peliActual.getUriCaratula() == null || seleccion==false){
                         tostada("Selecciona alguna carátula");  //evito que no se seleccione foto
                     }
                     else {
@@ -250,10 +247,10 @@ public class MyActivity extends Activity {
                         ad.notifyDataSetChanged();
                         tostada("Película añadida");
                     }
-
                 }
             }
         });
+       // Log.v("ruta", rutaFotoElegida);
         alert.setNegativeButton("Cancelar", null);
         alert.show();
         return true;
@@ -284,6 +281,7 @@ public class MyActivity extends Activity {
         btCambiarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 tostada("editooooo imagen");
                 Intent i = new Intent(Intent.ACTION_PICK);
                 i.setType("image/*");
