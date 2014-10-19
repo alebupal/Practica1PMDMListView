@@ -44,9 +44,7 @@ public class MyActivity extends Activity {
     private AdaptadorArrayList ad;
     private String rutaFotoElegida=null;
     private Boolean seleccion=false;
-
-    //cargador de imagenes
-    public ImageLoader cargadorImagenes;
+    public ImageLoader cargadorImagenes; //cargador de imagenes
     /****************************************************/
     /*                                                  */
     /*                  metodos on                      */
@@ -55,12 +53,7 @@ public class MyActivity extends Activity {
     public boolean onContextItemSelected(MenuItem item) {
         int id = item.getItemId();
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        //1 indice
         int index = info.position;
-        //2 Objeto view + el patron viewHolder
-       /* Object o = info.targetView.getTag();
-        AdaptadorArrayList.ViewHolder vh;
-        vh = (AdaptadorArrayList.ViewHolder) o;*/
         if (id == R.id.action_borrar) {
             borrar(index);
         } else if (id == R.id.action_editar) {
@@ -68,8 +61,6 @@ public class MyActivity extends Activity {
         }
         return super.onContextItemSelected(item);
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,10 +89,8 @@ public class MyActivity extends Activity {
     //si proceso el click: true y si no no el que lo devuelve es el super
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.action_anadir) {
             return anadir();
-
         } else if (id == R.id.action_fecha) {
             ordenarFecha();
         } else if (id == R.id.action_nombre) {
@@ -114,28 +103,21 @@ public class MyActivity extends Activity {
 
 //
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    Log.v("ruta", resultCode + "");
     if (resultCode == Activity.RESULT_OK && requestCode == INTENT_GALERIA) {
         peliActual = new Pelicula();
         rutaFotoElegida = getRealPathFromUri(data.getData());
         peliActual.setUriCaratula(rutaFotoElegida);
-
     } else if (resultCode == Activity.RESULT_OK && requestCode == INTENT_GALERIA_EDITAR) {
-
         rutaFotoElegida = getRealPathFromUri(data.getData());
-
         if (peliculas.get(posicionEditar).getUriCaratula() == null) {
-
             peliculas.get(posicionEditar).setUriCaratula(rutaFotoElegida);
             peliculas.get(posicionEditar).setCaratula(0);
         }
-        tostada(rutaFotoElegida);
         peliculas.get(posicionEditar).setUriCaratula(rutaFotoElegida);
     } else if (resultCode == 0) {
         rutaFotoElegida = null;
         seleccion = false;
     }
-
     super.onActivityResult(requestCode, resultCode, data);
 }
     /****************************************************/
@@ -172,24 +154,22 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 return o1.getAnio().compareTo(o2.getAnio());
             }
         });
-
         ad.notifyDataSetChanged();
     }
     public void ordenarGenero(){
         Collections.sort(peliculas, new Comparator<Pelicula>() {
             @Override
             public int compare(Pelicula o1, Pelicula o2) {
-                return o1.getGenero().compareTo(o2.getGenero());
+                return o1.getGenero().compareToIgnoreCase(o2.getGenero());
             }
         });
-
         ad.notifyDataSetChanged();
     }
     public void ordenarNombre(){
         Collections.sort(peliculas, new Comparator<Pelicula>() {
             @Override
             public int compare(Pelicula o1, Pelicula o2) {
-                return o1.getTitulo().compareTo(o2.getTitulo());
+                return o1.getTitulo().compareToIgnoreCase(o2.getTitulo());
             }
         });
         ad.notifyDataSetChanged();
@@ -203,13 +183,10 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     /*                                                  */
     /****************************************************/
     private boolean anadir() {
-
-        //Crea una ventana nueva donde podemos añadir nuevos elementos
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Añadir Película");
         LayoutInflater inflater = LayoutInflater.from(this);
         final View vista = inflater.inflate(R.layout.anadir, null);
-
         Button btfoto = (Button) vista.findViewById(R.id.btFoto);
         seleccion=false;
         btfoto.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +198,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 MyActivity.this.startActivityForResult(i, INTENT_GALERIA);
             }
         });
-
         alert.setView(vista);
         alert.setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, int whichButton) {
@@ -231,7 +207,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 etGenero = (EditText) vista.findViewById(R.id.etGenero);
                 if(peliActual==null)
                 peliActual = new Pelicula();
-                tostada("--------------------"+seleccion);
                 if(etTitulo.getText().toString().equals("")==true || etAnio.getText().toString().equals("")==true || etGenero.getText().toString().equals("")==true){
                     tostada("Algun/os campos vacíos");
                 }else{
@@ -250,13 +225,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 }
             }
         });
-       // Log.v("ruta", rutaFotoElegida);
         alert.setNegativeButton("Cancelar", null);
         alert.show();
         return true;
     }
     private boolean borrar(final int pos) {
-        //Crea una ventana nueva donde podemos añadir nuevos elementos
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("¿Seguro que desea borrarlo?");
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -271,7 +244,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         alert.show();
         return true;
     }
-
     private boolean editar(final int index) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setTitle("Editar");
@@ -281,8 +253,6 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         btCambiarFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                tostada("editooooo imagen");
                 Intent i = new Intent(Intent.ACTION_PICK);
                 i.setType("image/*");
                 MyActivity.this.startActivityForResult(i, INTENT_GALERIA_EDITAR);
@@ -293,23 +263,19 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         etTitulo = (EditText) vista.findViewById(R.id.etTitulo2);
         etAnio = (EditText) vista.findViewById(R.id.etAnio2);
         etGenero = (EditText) vista.findViewById(R.id.etGenero2);
-
         posicionEditar = index;
         etTitulo.setText(peliculas.get(index).getTitulo().toString());
         etAnio.setText(peliculas.get(index).getAnio().toString());
         etGenero.setText(peliculas.get(index).getGenero().toString());
-
         alert.setPositiveButton("Modificar", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 Pelicula peli = new Pelicula();
-
                 if(etTitulo.getText().toString().equals("")==true || etAnio.getText().toString().equals("")==true || etGenero.getText().toString().equals("")==true){
                     tostada("Algun/os campos vacíos");
                 }else{
                     peli.setTitulo(etTitulo.getText().toString());
                     peli.setAnio(Integer.parseInt(etAnio.getText().toString()));
                     peli.setGenero(etGenero.getText().toString());
-
                     if (peliculas.get(index).getCaratula() == 0) {
                         String caratula = peliculas.get(index).getUriCaratula().toString();
                         peli.setUriCaratula(caratula);
@@ -322,16 +288,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                     peliculas.set(index, peli);
                     ad.notifyDataSetChanged();
                     tostada("Película modificada");
-
-
                 }
             }
         });
         alert.setNegativeButton(android.R.string.no, null);
         alert.show();
-        return true;
-    }
-    private boolean settings() {
         return true;
     }
     private void visualizarCaratulas(ListView lv) {
@@ -369,9 +330,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
                 cursor.close();
             }
         }
-
     }
-
     //
     static public ImageLoader initImageLoader(Activity activity) {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
@@ -386,13 +345,9 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         cargadorImagenes.init(config);
         return cargadorImagenes;
     }
-
-
     //
     static public void cargarImagen(ImageLoader cargadorImagenes ,final ImageView imagen,final String ruta){
-
         //Ruta es una uri file:// o http:// ...
-        Log.v("CARGARIMAGEN2", ruta);
         try{
             cargadorImagenes.displayImage(ruta,imagen);
         }catch(Exception e){e.printStackTrace();}
