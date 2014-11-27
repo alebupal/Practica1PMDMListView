@@ -1,4 +1,4 @@
-package com.izv.android.proyecto1;
+package com.izv.android.Practica1PMDMListView;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

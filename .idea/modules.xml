@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Proyecto1ListView(PMDM).iml" filepath="$PROJECT_DIR$/Proyecto1ListView(PMDM).iml" />
+      <module fileurl="file://$PROJECT_DIR$/Practica1PMDMListView.iml" filepath="$PROJECT_DIR$/Practica1PMDMListView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

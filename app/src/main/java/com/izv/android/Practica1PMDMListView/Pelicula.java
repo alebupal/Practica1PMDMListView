@@ -1,6 +1,4 @@
-package com.izv.android.proyecto1;
-
-import android.graphics.drawable.Drawable;
+package com.izv.android.Practica1PMDMListView;
 
 /**
  * Created by Alejandro on 10/10/2014.
