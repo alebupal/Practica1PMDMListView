@@ -5,7 +5,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "com.izv.android.proyecto1"
+        applicationId "com.izv.android.Practica1PMDMListView"
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1

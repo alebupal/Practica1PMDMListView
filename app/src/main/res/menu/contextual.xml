@@ -9,5 +9,4 @@
         android:title="@string/m_borrar"
         android:orderInCategory="100"
         android:showAsAction="never" />
-
 </menu>
